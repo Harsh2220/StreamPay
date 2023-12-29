@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
@@ -11,7 +12,5 @@ export default function Home() {
     connected ? disconnect() : setVisible(true);
   }
 
-  return (
-    <Button onClick={Connect}>{connected ? "Disconnect" : "Connect"}</Button>
-  );
+  return <Navbar />;
 }
