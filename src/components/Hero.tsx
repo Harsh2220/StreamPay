@@ -30,11 +30,9 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      <img
-        className="absolute top-0 left-20"
-        src="https://shuffle.dev/nightsable-assets/images/headers/layer-blur.svg"
-        alt=""
-      />
     </section>
   );
 }
+
+
+// https://www.socketscan.io/tx/0x1fab373cfd63f3a282a5a9d386e8c8cba0c9a03b03016b8d5dfb1662269379bf
