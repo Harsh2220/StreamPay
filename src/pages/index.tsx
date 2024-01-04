@@ -2,6 +2,7 @@ import CompanyCard from "@/components/CompanyCard";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import RegisterCompany from "@/components/RegisterCompany";
+import RegisterUser from "@/components/RegisterUser";
 import { Button } from "@/components/ui/button";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -57,7 +58,7 @@ export default function Home() {
 
   return (
     <>
-      <CompanyCard />
+      <RegisterCompany />
     </>
   );
 }

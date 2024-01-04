@@ -3,6 +3,15 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { BiSolidPencil } from "react-icons/bi";
 
 export default function RegisterCompany() {
   return (
@@ -16,27 +25,50 @@ export default function RegisterCompany() {
             Submit your info and pay your employees to direct through stream.
           </p>
           <div className="p-8 rounded-xl border border-gray-900 max-w-xl mx-auto flex flex-col gap-4">
-            <div className="flex flex-col items-center lg:flex-row gap-4">
-              <div className="w-full">
-                <Label className="text-sm font-medium mb-2 block">
-                  First name
-                </Label>
-                <Input type="text" placeholder="First name" />
+            <div className="flex justify-center items-center mb-5">
+              <div className="relative">
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer">
+                  <BiSolidPencil className="text-black" />
+                </div>
               </div>
-              <div className="w-full">
+            </div>
+            <div className="flex items-center flex-wrap justify-between">
+              <div className="w-full md:w-7/12">
                 <Label className="text-sm font-medium mb-2 block">
-                  Last name
+                  Company Name
                 </Label>
-                <Input type="text" placeholder="Last name" />
+                <Input type="text" placeholder="Enter your company's name" />
+              </div>
+              <div className="w-full md:w-4/12">
+                <Label className="text-sm font-medium mb-2 block">Type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder="Select company type"
+                      className="placeholder:text-gray-400"
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Remote">Remote</SelectItem>
+                    <SelectItem value="Hybrid">Hybrid</SelectItem>
+                    <SelectItem value="In office">In office</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div>
-              <Label className="text-sm font-medium mb-2 block">Email</Label>
-              <Input type="text" placeholder="Email" />
+              <Label className="text-sm font-medium mb-2 block">Location</Label>
+              <Input type="text" placeholder="Location" />
             </div>
             <div>
-              <Label className="text-sm font-medium mb-2 block">Message</Label>
-              <Textarea placeholder="Message" />
+              <Label className="text-sm font-medium mb-2 block">
+                Description
+              </Label>
+              <Textarea placeholder="Write about your company" />
             </div>
             <Button className="w-full py-6 font-medium mt-4">Submit</Button>
             <p className="text-gray-500 text-sm">
