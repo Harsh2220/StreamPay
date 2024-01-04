@@ -44,29 +44,19 @@ export default function Home() {
 
       console.log("I am program", program);
 
-      const data = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("id"),
-          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
-        ],
-        program.programId
-      );
-      console.log("findPDA", data.toString());
-
-      // const derivePubkeyFromID=PublicKey.findProgramAddressSync(
-      //   [Buffer.from("id"), Buffer.from("123490")],
-      //   program.programId
-      // )
-
-      // console.log(data[0].toString(), "data pda");
-
-      //   const account = await program.account.company.all();
-
-      //   account.forEach((element) => {
-      //     console.log(element, "element");
-      //     console.log(element.publicKey.toString());
-      //   }
-      //   );
+      const all = await program.account.company.all();
+      console.log(all, "all");
+      const account = await program.account.company.all([
+        {
+          memcmp: {
+            offset: 8,
+            bytes: new PublicKey(
+              "7cCBmQVm7AnsdkYP5v8HKoBFyf1KnQVMSxVxHyLLboeG"
+            ).toBytes(),
+          },
+        },
+      ]);
+      console.log(account, "account");
     } catch (error) {
       console.log(error);
     }
@@ -82,23 +72,21 @@ export default function Home() {
       );
       const program = new Program(idl as Idl, programID, provider);
       console.log("Program", program);
-      const pda = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("id"),
-          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
-        ],
+      const [pda] = PublicKey.findProgramAddressSync(
+        [Buffer.from("company"), anchorWallet.publicKey.toBuffer()],
         program.programId
       );
-      console.log("pda from accc", pda[0]);
-      const pubKey = web3.Keypair.generate();
+      console.log(pda, "pda by pubkey");
+      
+
+      console.log("pda from accc", pda);
       const txHash = await program.methods
-        .initializeCompany(new BN(69), "ar://ququququq")
+        .initializeCompany("ar://ququququqhgfaghgcyhkycrtxd")
         .accounts({
-          company: pda[0],
+          company: pda,
           signer: anchorWallet?.publicKey,
-          systemProgram: SystemProgram.programId,
         })
-        .signers([pda[0], anchorWallet?.publicKey])
+        .signers()
         .rpc()
         .then((res) => {
           console.log(res, "rpc");
