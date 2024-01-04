@@ -1,32 +1,119 @@
-import CompanyCard from "@/components/CompanyCard";
-import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
-import RegisterCompany from "@/components/RegisterCompany";
-import RegisterUser from "@/components/RegisterUser";
 import { Button } from "@/components/ui/button";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  useAnchorWallet,
+  useConnection,
+  useWallet,
+} from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import {
-  GetProgramAccountsFilter,
-  LAMPORTS_PER_SOL,
-  PublicKey,
-} from "@solana/web3.js";
-import {
-  GenericStreamClient,
-  StreamflowEVM,
-  StreamflowSolana,
-  Types,
-} from "@streamflow/stream";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Program, BN, web3, AnchorProvider, Idl } from "@project-serum/anchor";
+import { PublicKey } from "@solana/web3.js";
 
+import idl from "../idl.json";
+
+const opts = {
+  preflightCommitment: "recent",
+};
+
+const { SystemProgram } = web3;
+const programID = new PublicKey("EimuHrWeLuL95txBNkXbNTB43A9EWwGDqcB4ndMECynM");
 export default function Home() {
   const { setVisible } = useWalletModal();
-  const { connected, disconnect, publicKey, wallets } = useWallet();
-  const { connection } = useConnection();
+  const { connected, disconnect, publicKey, wallets, wallet } = useWallet();
 
+  const anchorWallet = useAnchorWallet();
+  const { connection } = useConnection();
   async function Connect() {
     connected ? getdata() : setVisible(true);
   }
+
+  async function callProgram() {
+    try {
+      if (!wallet) return;
+      console.log("Progarm", programID);
+
+      const provider = new AnchorProvider(
+        connection,
+        anchorWallet,
+        opts.preflightCommitment
+      );
+
+      const program = new Program(idl, programID, provider);
+
+      console.log("I am program", program);
+
+      const data = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("id"),
+          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
+        ],
+        program.programId
+      );
+      console.log("findPDA", data.toString());
+
+      // const derivePubkeyFromID=PublicKey.findProgramAddressSync(
+      //   [Buffer.from("id"), Buffer.from("123490")],
+      //   program.programId
+      // )
+
+      // console.log(data[0].toString(), "data pda");
+
+      //   const account = await program.account.company.all();
+
+      //   account.forEach((element) => {
+      //     console.log(element, "element");
+      //     console.log(element.publicKey.toString());
+      //   }
+      //   );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const sendTransaction = async () => {
+    try {
+      if (!anchorWallet) return;
+      const provider = new AnchorProvider(
+        connection,
+        anchorWallet,
+        AnchorProvider.defaultOptions()
+      );
+      const program = new Program(idl as Idl, programID, provider);
+      console.log("Program", program);
+      const pda = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("id"),
+          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
+        ],
+        program.programId
+      );
+      console.log("pda from accc", pda[0]);
+      const pubKey = web3.Keypair.generate();
+      const txHash = await program.methods
+        .initializeCompany(new BN(69), "ar://ququququq")
+        .accounts({
+          company: pda[0],
+          signer: anchorWallet?.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .signers([pda[0], anchorWallet?.publicKey])
+        .rpc()
+        .then((res) => {
+          console.log(res, "rpc");
+        })
+        .catch((err) => {
+          console.log(err, "rpc");
+        });
+      console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
+      console.log("txHash", txHash);
+      // Confirm transaction
+      // await connection.confirmTransaction(txHash, 'confirmed')
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   async function getdata() {
     if (!publicKey) return;
@@ -58,7 +145,13 @@ export default function Home() {
 
   return (
     <>
-      <RegisterCompany />
+      <Navbar />
+      <Button onClick={sendTransaction} style={{ alignSelf: "center" }}>
+        send
+      </Button>
+      <Button onClick={callProgram} style={{ alignSelf: "center" }}>
+        CALALLlALLALAL
+      </Button>
     </>
   );
 }
