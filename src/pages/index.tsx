@@ -8,17 +8,13 @@ import {
 } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { Program, BN, web3, AnchorProvider, Idl } from "@project-serum/anchor";
+import { Program, web3, AnchorProvider, Idl } from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
 
 import idl from "../idl.json";
 
-const opts = {
-  preflightCommitment: "recent",
-};
-
 const { SystemProgram } = web3;
-const programID = new PublicKey("EimuHrWeLuL95txBNkXbNTB43A9EWwGDqcB4ndMECynM");
+const programID = new PublicKey("4gVJJfEuebrPBzsj1kaGEgXryFCgBT5ywQ9T44zrKXRV");
 export default function Home() {
   const { setVisible } = useWalletModal();
   const { connected, disconnect, publicKey, wallets, wallet } = useWallet();
@@ -31,32 +27,30 @@ export default function Home() {
 
   async function callProgram() {
     try {
-      if (!wallet) return;
+      if (!anchorWallet) return;
       console.log("Progarm", programID);
 
       const provider = new AnchorProvider(
         connection,
         anchorWallet,
-        opts.preflightCommitment
+        AnchorProvider.defaultOptions()
       );
 
-      const program = new Program(idl, programID, provider);
+      const program = new Program(idl as Idl, programID, provider);
 
       console.log("I am program", program);
-
+      const [pda] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("cid"),
+          Buffer.from(anchorWallet.publicKey.toString().slice(0, 16)),
+        ],
+        program.programId
+      );
       const all = await program.account.company.all();
       console.log(all, "all");
-      const account = await program.account.company.all([
-        {
-          memcmp: {
-            offset: 8,
-            bytes: new PublicKey(
-              "7cCBmQVm7AnsdkYP5v8HKoBFyf1KnQVMSxVxHyLLboeG"
-            ).toBytes(),
-          },
-        },
-      ]);
+      const account = await program.account.company.fetch(pda);
       console.log(account, "account");
+      console.log("Fecthed Account from user Address", pda.toString());
     } catch (error) {
       console.log(error);
     }
@@ -71,22 +65,26 @@ export default function Home() {
         AnchorProvider.defaultOptions()
       );
       const program = new Program(idl as Idl, programID, provider);
-      console.log("Program", program);
+      console.log("Solana Program Instance", program);
       const [pda] = PublicKey.findProgramAddressSync(
-        [Buffer.from("company"), anchorWallet.publicKey.toBuffer()],
+        [
+          Buffer.from("cid"),
+          Buffer.from(anchorWallet.publicKey.toString().slice(0, 16)),
+        ],
         program.programId
       );
-      console.log(pda, "pda by pubkey");
-      
+      console.log("Derived PDA Account PubKey", pda.toString());
 
-      console.log("pda from accc", pda);
       const txHash = await program.methods
-        .initializeCompany("ar://ququququqhgfaghgcyhkycrtxd")
+        .initializeCompany(
+          anchorWallet.publicKey.toString().slice(0, 16),
+          "ar://ququququqhgfaghgcyhkycrtxd"
+        )
         .accounts({
           company: pda,
           signer: anchorWallet?.publicKey,
+          systemProgram: SystemProgram.programId,
         })
-        .signers()
         .rpc()
         .then((res) => {
           console.log(res, "rpc");
@@ -94,10 +92,7 @@ export default function Home() {
         .catch((err) => {
           console.log(err, "rpc");
         });
-      console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
       console.log("txHash", txHash);
-      // Confirm transaction
-      // await connection.confirmTransaction(txHash, 'confirmed')
     } catch (error) {
       console.log(error);
     }

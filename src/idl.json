@@ -8,7 +8,7 @@
                 {
                     "name": "company",
                     "isMut": true,
-                    "isSigner": true
+                    "isSigner": false
                 },
                 {
                     "name": "signer",
@@ -22,6 +22,10 @@
                 }
             ],
             "args": [
+                {
+                    "name": "cId",
+                    "type": "string"
+                },
                 {
                     "name": "metadataUri",
                     "type": "string"
@@ -49,6 +53,10 @@
             ],
             "args": [
                 {
+                    "name": "uId",
+                    "type": "string"
+                },
+                {
                     "name": "metadataUri",
                     "type": "string"
                 }
@@ -62,12 +70,16 @@
                 "kind": "struct",
                 "fields": [
                     {
-                        "name": "id",
-                        "type": "publicKey"
+                        "name": "cId",
+                        "type": "string"
                     },
                     {
                         "name": "metadataUri",
                         "type": "string"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
                     }
                 ]
             }
@@ -78,12 +90,16 @@
                 "kind": "struct",
                 "fields": [
                     {
-                        "name": "id",
-                        "type": "publicKey"
+                        "name": "uId",
+                        "type": "string"
                     },
                     {
                         "name": "metadataUri",
                         "type": "string"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
                     }
                 ]
             }
