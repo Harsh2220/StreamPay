@@ -1,60 +1,36 @@
 // program.rs
 
 use anchor_lang::prelude::*;
+use std::mem::size_of;
 
-declare_id!("4gVJJfEuebrPBzsj1kaGEgXryFCgBT5ywQ9T44zrKXRV");
+declare_id!("HJQBiUzcGgR7eZnQpYwpxgarH9yy6vDHtZW8gCExyPzU");
 
 #[program]
 mod stream_pay {
     use super::*;
 
-    pub fn initialize_company(
-        ctx: Context<InitializeCompany>,
-        c_id: String,
-        metadata_uri: String,
-    ) -> Result<()> {
-        let companies = &mut ctx.accounts.company;
-        companies.c_id = c_id;
-        companies.metadata_uri = metadata_uri;
-        Ok(())
-    }
-
     pub fn initialize_user(
         ctx: Context<InitializeUser>,
-        u_id: String,
+        id: String,
         metadata_uri: String,
+        is_company: bool,
     ) -> Result<()> {
         let user = &mut ctx.accounts.user;
-        user.u_id = u_id;
+        user.id = id;
+        user.is_company = is_company;
         user.metadata_uri = metadata_uri;
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-#[instruction(cid: String)]
-pub struct InitializeCompany<'info> {
-    #[account(
-        init,
-        payer = signer,
-        space = 1000,
-        seeds = ["cid".as_bytes(),cid.as_bytes()],
-        bump
-    )]
-    pub company: Account<'info, Company>,
-    #[account(mut)]
-    pub signer: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-#[instruction(uid: String)]
+#[instruction(id: String)]
 pub struct InitializeUser<'info> {
     #[account(
         init,
         payer = signer,
-        space = 1000,
-        seeds = ["uid".as_bytes(),uid.as_bytes()],
+        space = size_of::<InitializeUser>() + 16,
+        seeds = ["id".as_bytes(),id.as_bytes()],
         bump
     )]
     pub user: Account<'info, User>,
@@ -62,17 +38,9 @@ pub struct InitializeUser<'info> {
     pub signer: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-
-#[account]
-pub struct Company {
-    pub c_id: String,
-    pub metadata_uri: String,
-    pub bump: u8,
-}
-
 #[account]
 pub struct User {
-    pub u_id: String,
+    pub id: String,
     pub metadata_uri: String,
-    pub bump: u8,
+    pub is_company: bool,
 }
