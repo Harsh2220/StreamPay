@@ -1,18 +1,13 @@
 import Navbar from "@/components/Navbar";
+import RegisterCompany from "@/components/RegisterCompany";
+import RegisterUser from "@/components/RegisterUser";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import {
-  useAnchorWallet,
-  useConnection,
-  useWallet,
-} from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export default function Home() {
-  const { setVisible } = useWalletModal();
-  const { connected, disconnect, publicKey, wallets, wallet } = useWallet();
+  const { publicKey } = useWallet();
 
-  const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
   async function getdata() {
@@ -45,7 +40,7 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
+      <RegisterCompany />
     </>
   );
 }

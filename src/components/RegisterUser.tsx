@@ -20,6 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import useUserStore from "@/store/user";
 
 const frameworks = [
   {
@@ -94,6 +95,8 @@ function ComboboxDemo() {
 }
 
 export default function RegisterUser() {
+  const { name, setName, bio, setBio } = useUserStore();
+
   return (
     <section className="overflow-hidden">
       <div className="container px-4 mx-auto">
@@ -118,7 +121,14 @@ export default function RegisterUser() {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Name</Label>
-              <Input type="text" placeholder="Enter your name" />
+              <Input
+                type="text"
+                placeholder="Enter your name"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                value={name}
+              />
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Location</Label>
@@ -126,7 +136,13 @@ export default function RegisterUser() {
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Bio</Label>
-              <Textarea placeholder="Write about yourself" />
+              <Textarea
+                placeholder="Write about yourself"
+                onChange={(e) => {
+                  setBio(e.target.value);
+                }}
+                value={bio}
+              />
             </div>
             <div className="">
               <Label className="text-sm font-medium mb-2 block">

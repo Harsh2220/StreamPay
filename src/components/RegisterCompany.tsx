@@ -12,8 +12,20 @@ import {
 } from "./ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BiSolidPencil } from "react-icons/bi";
+import useCompanyStore, { companyType } from "@/store/company";
+
+const companyTypes: companyType[] = ["Remote", "Hybrid", "In-Office"];
 
 export default function RegisterCompany() {
+  const {
+    name,
+    description,
+    location,
+    setName,
+    setLocation,
+    setDescription,
+    setCompanyType,
+  } = useCompanyStore();
   return (
     <section className="overflow-hidden">
       <div className="container px-4 mx-auto">
@@ -41,11 +53,22 @@ export default function RegisterCompany() {
                 <Label className="text-sm font-medium mb-2 block">
                   Company Name
                 </Label>
-                <Input type="text" placeholder="Enter your company's name" />
+                <Input
+                  type="text"
+                  placeholder="Enter your company's name"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  value={name}
+                />
               </div>
               <div className="w-full md:w-4/12">
                 <Label className="text-sm font-medium mb-2 block">Type</Label>
-                <Select>
+                <Select
+                  onValueChange={(value: companyType) => {
+                    setCompanyType(value);
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue
                       placeholder="Select company type"
@@ -53,22 +76,37 @@ export default function RegisterCompany() {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Remote">Remote</SelectItem>
-                    <SelectItem value="Hybrid">Hybrid</SelectItem>
-                    <SelectItem value="In office">In office</SelectItem>
+                    {companyTypes.map((companyType, index) => (
+                      <SelectItem key={index} value={companyType}>
+                        {companyType}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Location</Label>
-              <Input type="text" placeholder="Location" />
+              <Input
+                type="text"
+                placeholder="Location"
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                }}
+                value={location}
+              />
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">
                 Description
               </Label>
-              <Textarea placeholder="Write about your company" />
+              <Textarea
+                placeholder="Write about your company"
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+                value={description}
+              />
             </div>
             <Button className="w-full py-6 font-medium mt-4">Submit</Button>
             <p className="text-gray-500 text-sm">
