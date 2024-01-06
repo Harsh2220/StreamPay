@@ -43,9 +43,13 @@ export default function RegisterCompany() {
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer">
+                <Label
+                  htmlFor="comapnay-logo"
+                  className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer"
+                >
                   <BiSolidPencil className="text-black" />
-                </div>
+                </Label>
+                <input type="file" id="comapnay-logo" hidden />
               </div>
             </div>
             <div className="flex items-center flex-wrap justify-between">

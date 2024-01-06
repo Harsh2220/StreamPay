@@ -5,7 +5,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -114,9 +113,20 @@ export default function RegisterUser() {
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer">
+                <Label
+                  htmlFor="user-avatar"
+                  className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer"
+                >
                   <BiSolidPencil className="text-black" />
-                </div>
+                </Label>
+                <input
+                  type="file"
+                  id="user-avatar"
+                  hidden
+                  onChange={(e) => {
+                    console.log(e);
+                  }}
+                />
               </div>
             </div>
             <div>
