@@ -13,18 +13,15 @@ import { PublicKey } from "@solana/web3.js";
 
 import idl from "../idl.json";
 
-const opts = {
-  preflightCommitment: "recent",
-};
-
 const { SystemProgram } = web3;
-const programID = new PublicKey("HJQBiUzcGgR7eZnQpYwpxgarH9yy6vDHtZW8gCExyPzU");
+const programID = new PublicKey("62NoqVk9TyThwDHghY6B4wmp4D2rqkfbrDn4jFnEy6XC");
 export default function Home() {
   const { setVisible } = useWalletModal();
   const { connected, disconnect, publicKey, wallets, wallet } = useWallet();
 
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
+
   async function Connect() {
     connected ? getdata() : setVisible(true);
   }
@@ -45,10 +42,7 @@ export default function Home() {
       console.log("I am program", program);
 
       const data = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("id"),
-          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
-        ],
+        [Buffer.from("id"), anchorWallet?.publicKey.toBuffer()],
         program.programId
       );
       console.log("findPDA", data.toString());
@@ -153,18 +147,11 @@ export default function Home() {
       const program = new Program(idl as Idl, programID, provider);
       console.log("Program", program);
       const pda = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("id"),
-          Buffer.from(anchorWallet?.publicKey.toString().slice(0, 6)),
-        ],
+        [Buffer.from("id"), anchorWallet?.publicKey.toBuffer()],
         program.programId
       );
       const txHash = await program.methods
-        .initializeUser(
-          anchorWallet?.publicKey.toString().slice(0, 6),
-          "ar://ququququq",
-          false
-        )
+        .initializeUser("ar://kjsndfnsdfsnjkd", false)
         .accounts({
           user: pda[0],
           signer: anchorWallet?.publicKey,
