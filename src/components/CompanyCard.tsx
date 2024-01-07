@@ -72,7 +72,7 @@ export default function CompanyCard() {
         className="w-full text-center text-white font-bold text-sm leading-6 py-6 bg-blue-600 hover:bg-blue-600 rounded-xl"
         size="lg"
       >
-        Apply Now
+        Join
       </Button>
     </section>
   );

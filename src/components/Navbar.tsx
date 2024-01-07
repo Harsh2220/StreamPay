@@ -27,10 +27,10 @@ export default function Navbar() {
             <div className="w-auto">
               <div className="flex flex-wrap items-center">
                 <div className="w-auto hidden lg:block">
-                  <ul className="flex items-center justify-center">
-                    <li className="mr-9">
+                  <ul className="flex items-center justify-center gap-4">
+                    <li>
                       <a
-                        className="inline-block text-sm font-bold text-gray-200 hover:text-gray-300"
+                        className="inline-block text font-bold text-white hover:text-gray-100"
                         href="#"
                       >
                         Companies
@@ -38,7 +38,7 @@ export default function Navbar() {
                     </li>
                     <li>
                       <a
-                        className="inline-block text-sm font-bold text-gray-200 hover:text-gray-300"
+                        className="inline-block text font-bold text-white hover:text-gray-100"
                         href="#"
                       >
                         Users
