@@ -1,16 +1,15 @@
 import Navbar from "@/components/Navbar";
+import RegisterCompany from "@/components/RegisterCompany";
+import RegisterUser from "@/components/RegisterUser";
 import { Button } from "@/components/ui/button";
-import { BN } from "@project-serum/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import {
   useAnchorWallet,
   useConnection,
   useWallet,
 } from "@solana/wallet-adapter-react";
-import { LAMPORTS_PER_SOL, clusterApiUrl } from "@solana/web3.js";
-import { Types, getBN } from "@streamflow/stream";
-import { GenericStreamClient } from "@streamflow/stream";
-import { ICluster, StreamType } from "@streamflow/stream/dist/common/types";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { ICluster } from "@streamflow/stream/dist/common/types";
 import { SolanaStreamClient } from "@streamflow/stream/dist/solana";
 
 export default function Home() {
@@ -116,6 +115,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      <RegisterCompany/>
       <Button onClick={createStream}>Create</Button>
     </>
   );

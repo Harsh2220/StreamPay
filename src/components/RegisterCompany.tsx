@@ -1,4 +1,4 @@
-import React from "react";
+import { ChangeEvent } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
@@ -13,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BiSolidPencil } from "react-icons/bi";
 import useCompanyStore, { companyType } from "@/store/company";
+import uploadImageToIPFS from "@/utils/uploadToIPFS";
 
 const companyTypes: companyType[] = ["Remote", "Hybrid", "In-Office"];
 
@@ -25,7 +26,26 @@ export default function RegisterCompany() {
     setLocation,
     setDescription,
     setCompanyType,
+    localImage,
+    setLocalImage,
   } = useCompanyStore();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setLocalImage({
+        selectedFile: e.target.files[0],
+        selectedFileUrl: URL.createObjectURL(e.target.files[0]),
+      });
+    }
+  };
+
+  const upload = async () => {
+    try {
+      if (!localImage.selectedFile) return;
+      const cid = await uploadImageToIPFS(new Blob([localImage.selectedFile]));
+      console.log("Got File CID: ", cid);
+    } catch (error) {}
+  };
   return (
     <section className="overflow-hidden">
       <div className="container px-4 mx-auto">
@@ -40,7 +60,12 @@ export default function RegisterCompany() {
             <div className="flex justify-center items-center mb-5">
               <div className="relative">
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={
+                      localImage.selectedFileUrl ??
+                      "https://github.com/shadcn.png"
+                    }
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <Label
@@ -49,7 +74,12 @@ export default function RegisterCompany() {
                 >
                   <BiSolidPencil className="text-black" />
                 </Label>
-                <input type="file" id="comapnay-logo" hidden />
+                <input
+                  type="file"
+                  id="comapnay-logo"
+                  hidden
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="flex items-center flex-wrap justify-between">
@@ -112,7 +142,9 @@ export default function RegisterCompany() {
                 value={description}
               />
             </div>
-            <Button className="w-full py-6 font-medium mt-4">Submit</Button>
+            <Button className="w-full py-6 font-medium mt-4" onClick={upload}>
+              Submit
+            </Button>
             <p className="text-gray-500 text-sm">
               <span>We process your information in accordance with our</span>
               <span> </span>
