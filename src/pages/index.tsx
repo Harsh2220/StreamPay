@@ -1,3 +1,5 @@
+import CompanyCard from "@/components/CompanyCard";
+import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { BN } from "@project-serum/anchor";
@@ -116,7 +118,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <Button onClick={createStream}>Create</Button>
+      <CompanyCard />
     </>
   );
 }

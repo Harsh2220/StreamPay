@@ -3,7 +3,14 @@ import { Button } from "./ui/button";
 
 export default function CompanyCard() {
   return (
-    <section className="p-6 border border-gray-800 rounded-xl max-w-96">
+    <section className="relative p-6 border border-gray-800 rounded-xl max-w-96">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-20"
+      >
+        <div className="blur-[106px] h-32 bg-gradient-to-br to-purple-400 from-blue-700"></div>
+        <div className="blur-[106px] h-24 bg-gradient-to-r from-cyan-400 to-indigo-600"></div>
+      </div>
       <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500 rounded-lg">
         <svg
           width="31"
