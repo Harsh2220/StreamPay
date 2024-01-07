@@ -10,14 +10,14 @@ import {
 import { LAMPORTS_PER_SOL, clusterApiUrl } from "@solana/web3.js";
 import { Types, getBN } from "@streamflow/stream";
 import { GenericStreamClient } from "@streamflow/stream";
-import { ICluster } from "@streamflow/stream/dist/common/types";
+import { ICluster, StreamType } from "@streamflow/stream/dist/common/types";
 import { SolanaStreamClient } from "@streamflow/stream/dist/solana";
 
 export default function Home() {
   const { publicKey, wallet, signTransaction, signAllTransactions } =
     useWallet();
   const { connection } = useConnection();
-  const da = useAnchorWallet();
+  const anchorWallet = useAnchorWallet();
 
   async function getdata() {
     if (!publicKey) return;
@@ -47,54 +47,38 @@ export default function Home() {
     console.log(balances);
   }
 
-  const futuredate = () => {
-    const currentTimestamp = Date.now() / 1000; // Convert to seconds
-
-    const tenDaysInSeconds = 10 * 24 * 60 * 60; // 10 days in seconds
-    const futureTimestamp = currentTimestamp + tenDaysInSeconds;
-
-    const futureDate = new Date(futureTimestamp * 1000);
-
-    return Number(futureDate) / 1000;
-  };
   async function createStream() {
-    const client = new GenericStreamClient<Types.IChain.Solana>({
-      chain: Types.IChain.Solana, // Blockchain
-      clusterUrl: "https://api.devnet.solana.com", // RPC cluster URL
-      cluster: Types.ICluster.Devnet, // (optional) (default: Mainnet)
-      // ...rest chain specific params e.g. commitment for Solana
-    });
-    const c = new SolanaStreamClient(
-      clusterApiUrl("devnet"),
-      ICluster.Devnet,
-      "max"
+    const client = new SolanaStreamClient(
+      "https://api.devnet.solana.com",
+      ICluster.Devnet
     );
 
-    c.create(
-      {
-        amount: getBN(1, 6),
-        amountPerPeriod: getBN(0.01, 6),
-        cancelableByRecipient: true,
-        cancelableBySender: true,
-        canTopup: false,
-        cliff: futuredate(),
-        cliffAmount: new BN(1),
-        name: "HELLO",
-        period: 1,
-        recipient: "CZA6Cqz59PioMHfZFjouL54DM4U7yxBDphaVjJUAzLXL",
-        start: Number(Date.now() / 1000),
-        tokenId: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-        transferableByRecipient: true,
-        transferableBySender: false,
-      },
-      { sender: da, isNative: false }
-    )
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    // client
+    //   .create(
+    //     {
+    //       amount: getBN(1, 6),
+    //       amountPerPeriod: getBN(0.01, 6),
+    //       cancelableByRecipient: true,
+    //       cancelableBySender: true,
+    //       canTopup: false,
+    //       cliff: futuredate(),
+    //       cliffAmount: new BN(1),
+    //       name: "HELLO",
+    //       period: 1,
+    //       recipient: "CZA6Cqz59PioMHfZFjouL54DM4U7yxBDphaVjJUAzLXL",
+    //       start: 0,
+    //       tokenId: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    //       transferableByRecipient: true,
+    //       transferableBySender: false,
+    //     },
+    //     { sender: anchorWallet, isNative: false }
+    //   )
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
     // const createStreamParams: Types.ICreateStreamData = {
     //   recipient: new PublicKey("67UH3NriChXXKiogpjzgnXi1vPW1h52Jsbod4N4azmJL").toString(), // Recipient address.
     //   tokenId: "ERv8UF6ikad4koC5bLTMbW5obUggciKD4SwvFUU58bN3", // Token mint address.
