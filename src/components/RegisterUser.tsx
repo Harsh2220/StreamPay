@@ -18,7 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import useUserStore from "@/store/user";
 
 const frameworks = [
@@ -47,7 +47,6 @@ const frameworks = [
 function ComboboxDemo() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild className="w-full">
@@ -94,7 +93,17 @@ function ComboboxDemo() {
 }
 
 export default function RegisterUser() {
-  const { name, setName, bio, setBio } = useUserStore();
+  const { name, setName, bio, setBio, localImage, setLocalImage } =
+    useUserStore();
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setLocalImage({
+        selectedFile: e.target.files[0],
+        selectedFileUrl: URL.createObjectURL(e.target.files[0]),
+      });
+    }
+  };
 
   return (
     <section className="overflow-hidden">
@@ -110,7 +119,12 @@ export default function RegisterUser() {
             <div className="flex justify-center items-center mb-5">
               <div className="relative">
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={
+                      localImage.selectedFileUrl ??
+                      "https://github.com/shadcn.png"
+                    }
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <Label
@@ -123,9 +137,7 @@ export default function RegisterUser() {
                   type="file"
                   id="user-avatar"
                   hidden
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  onChange={handleChange}
                 />
               </div>
             </div>
