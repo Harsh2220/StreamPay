@@ -1,25 +1,26 @@
-import CompanyCard from "@/components/CompanyCard";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
-import RegisterCompany from "@/components/RegisterCompany";
-import RegisterUser from "@/components/RegisterUser";
-import UserCard from "@/components/UserCard";
 import { Button } from "@/components/ui/button";
+import useEmployee from "@/hooks/useAddEmployee";
+import useCreateCompany from "@/hooks/useCreateCompany";
+import useCreateUser from "@/hooks/useCreateUser";
+import useDeleteAccount from "@/hooks/useDeleteAccount";
+import useGetCompany from "@/hooks/useGetCompany";
+import useGetUser from "@/hooks/useGetUser";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import {
-  useAnchorWallet,
-  useConnection,
-  useWallet,
-} from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { ICluster } from "@streamflow/stream/dist/common/types";
-import { SolanaStreamClient } from "@streamflow/stream/dist/solana";
 
 export default function Home() {
-  const { publicKey, wallet, signTransaction, signAllTransactions } =
-    useWallet();
+  const { publicKey } = useWallet();
   const { connection } = useConnection();
-  const anchorWallet = useAnchorWallet();
+  const { createUser } = useCreateUser();
+  const { createCompany } = useCreateCompany();
+  const { getCompany } = useGetCompany();
+  const { addEmployee, removeEmployee } = useEmployee();
+  const { deleteCompany, deleteUser } = useDeleteAccount();
+
+  const { getUser } = useGetUser();
 
   async function getdata() {
     if (!publicKey) return;
@@ -45,12 +46,29 @@ export default function Home() {
       // console.log(`--Token Mint: ${mintAddress}`);
       // console.log(`--Token Balance: ${tokenBalance}`);
     });
-
-    console.log(balances);
   }
 
   return (
     <>
+      <Button onClick={createUser}>Create USER</Button>
+      <Button onClick={getUser}>Get User</Button>
+      <br />
+      <br />
+      <br />
+      <Button onClick={createCompany}>Create company</Button>
+      <Button onClick={getCompany}>Get Company</Button>
+      <br />
+      <br />
+      <br />
+      <Button onClick={addEmployee}>Add an Employee</Button>
+      <Button onClick={removeEmployee}>Remove employee</Button>
+      <br />
+      <br />
+      <br />
+      <Button onClick={deleteCompany}>Delete Company</Button>
+      <Button onClick={deleteUser}>Delete User</Button>
+
+
       <Navbar />
       <Hero />
     </>

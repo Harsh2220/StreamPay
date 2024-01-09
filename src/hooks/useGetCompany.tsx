@@ -4,11 +4,11 @@ import { AnchorProvider, Idl, Program } from "@project-serum/anchor";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import idl from "../data/idl.json";
 
-export default function useGetUser() {
+export default function useGetCompany() {
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
-  async function getUser() {
+  async function getCompany() {
     try {
       if (!anchorWallet) return;
       const provider = new AnchorProvider(
@@ -17,15 +17,18 @@ export default function useGetUser() {
         AnchorProvider.defaultOptions()
       );
       const program = new Program(idl as Idl, programID, provider);
-      const pda = getPDA(anchorWallet?.publicKey?.toBuffer(),false);
-      const account = await program.account.user.fetch(pda);
-      console.log("Account", account);
-      
+      const pda = getPDA(anchorWallet?.publicKey?.toBuffer(), true);
+      const account = await program.account.company.fetch(pda);
+      console.log("Company Account", account);
+      if(account){
+        console.log("Company Account", account.allEmployees[0].toString());
+      }
+
       return account;
     } catch (error) {
       console.log(error);
     }
   }
 
-  return { getUser };
+  return { getCompany };
 }
