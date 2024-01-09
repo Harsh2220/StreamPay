@@ -31,7 +31,10 @@ export default function useCreateCompany() {
       console.log("Tx Hash", txHash);
       return txHash;
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        console.log(error);
+        throw new Error(error.message);
+      }
     }
   }
 

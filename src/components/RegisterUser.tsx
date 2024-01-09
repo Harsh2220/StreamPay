@@ -100,8 +100,16 @@ function ComboboxDemo() {
 }
 
 export default function RegisterUser() {
-  const { name, setName, bio, setBio, localImage, setLocalImage, reset,companyID } =
-    useUserStore();
+  const {
+    name,
+    setName,
+    bio,
+    setBio,
+    localImage,
+    setLocalImage,
+    reset,
+    companyID,
+  } = useUserStore();
   const { createUser } = useCreateUser();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -144,11 +152,16 @@ export default function RegisterUser() {
       toast("Profile registered!", {
         description:
           "Now, you can create list jobs and stream to your employees.",
+        action: {
+          label: "View On SolScan",
+          onClick: () => {
+            window.open(`https://solscan.io/tx/${txnHash}`, "_blank");
+          },
+        },
       });
       reset();
     } catch (error) {
       if (error instanceof Error) {
-
         if (error.message.includes("User rejected the request")) {
           toast("User rejected the request", {
             description: "Please accept the request to create your profile.",

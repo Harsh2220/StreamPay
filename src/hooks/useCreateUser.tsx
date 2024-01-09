@@ -32,8 +32,8 @@ export default function useCreateUser() {
       return txHash;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message);
         console.log(error);
+        throw new Error(error.message);
       }
     }
   }
