@@ -1,7 +1,7 @@
 import { ARWEAVE_PREFIX } from "@/constants";
-import { CompanyMetadata } from "@/types";
+import { CompanyMetadata, UserMetadata } from "@/types";
 
-async function uploadMetadata(metadata: CompanyMetadata) {
+async function uploadMetadata(metadata: CompanyMetadata | UserMetadata) {
   try {
     const headersList = {
       "Content-Type": "application/json",

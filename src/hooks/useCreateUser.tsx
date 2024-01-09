@@ -9,7 +9,8 @@ export default function useCreateUser() {
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
-  async function createUser() {
+  async function createUser(metadataURI: string) {
+    if (!metadataURI) throw new Error("Metadata URI is required");
     try {
       if (!anchorWallet) return;
       const provider = new AnchorProvider(
@@ -18,7 +19,7 @@ export default function useCreateUser() {
         AnchorProvider.defaultOptions()
       );
       const program = new Program(idl as Idl, programID, provider);
-      const pda = getPDA(anchorWallet?.publicKey?.toBuffer(),false);
+      const pda = getPDA(anchorWallet?.publicKey?.toBuffer(), false);
       const txHash = await program.methods
         .initializeUser("ar://kjsndfnsdfsnjkd")
         .accounts({
@@ -30,7 +31,10 @@ export default function useCreateUser() {
       console.log("Tx Hash", txHash);
       return txHash;
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+        console.log(error);
+      }
     }
   }
 

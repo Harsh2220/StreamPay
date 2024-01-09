@@ -9,3 +9,11 @@ export type CompanyMetadata = {
   type: CompanyType;
   website: string;
 };
+
+export type UserMetadata = {
+  metadataId: string;
+  name: string;
+  bio: string;
+  companyID: string;
+  picture: string | undefined;
+};

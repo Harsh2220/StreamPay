@@ -4,8 +4,10 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid";
+import { toast } from "sonner";
 import {
   Command,
   CommandEmpty,
@@ -20,6 +22,11 @@ import {
 } from "@/components/ui/popover";
 import React, { ChangeEvent, useState } from "react";
 import useUserStore from "@/store/user";
+import uploadImageToIPFS from "@/utils/uploadToIPFS";
+import { CompanyMetadata, UserMetadata } from "@/types";
+import { IPFS_PROTO_PREFIX } from "@/constants";
+import uploadMetadata from "@/utils/uploadMetadata";
+import useCreateUser from "@/hooks/useCreateUser";
 
 const frameworks = [
   {
@@ -93,15 +100,68 @@ function ComboboxDemo() {
 }
 
 export default function RegisterUser() {
-  const { name, setName, bio, setBio, localImage, setLocalImage } =
+  const { name, setName, bio, setBio, localImage, setLocalImage, reset,companyID } =
     useUserStore();
-
+  const { createUser } = useCreateUser();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLocalImage({
         selectedFile: e.target.files[0],
         selectedFileUrl: URL.createObjectURL(e.target.files[0]),
       });
+    }
+  };
+
+  const [isCreating, setIsCreating] = useState(false);
+
+  const uploadImage = async () => {
+    try {
+      if (!localImage.selectedFile) return;
+      const cid = await uploadImageToIPFS(new Blob([localImage.selectedFile]));
+      if (cid) {
+        return cid;
+      }
+      return undefined;
+    } catch (error) {}
+  };
+
+  const handleSubmit = async () => {
+    setIsCreating(true);
+    try {
+      const cid = await uploadImage();
+      const metadata: UserMetadata = {
+        metadataId: uuidv4(),
+        name,
+        bio,
+        companyID: "",
+        picture: cid ? IPFS_PROTO_PREFIX + cid : undefined,
+      };
+      const metadataUri = await uploadMetadata(metadata);
+      console.log(metadata);
+      console.log(metadataUri);
+      if (!metadataUri) throw new Error("Something went wrong");
+      const txnHash = await createUser(metadataUri);
+      toast("Profile registered!", {
+        description:
+          "Now, you can create list jobs and stream to your employees.",
+      });
+      reset();
+    } catch (error) {
+      if (error instanceof Error) {
+
+        if (error.message.includes("User rejected the request")) {
+          toast("User rejected the request", {
+            description: "Please accept the request to create your profile.",
+          });
+          return;
+        }
+        toast("Something went wrong!", {
+          description:
+            "Please try again :(, If the problem persists, please contact us.",
+        });
+      }
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -168,11 +228,20 @@ export default function RegisterUser() {
             </div>
             <div className="">
               <Label className="text-sm font-medium mb-2 block">
-                Select your company
+                Select your Framework
               </Label>
               <ComboboxDemo />
             </div>
-            <Button className="w-full py-6 font-medium mt-4">Submit</Button>
+            <Button
+              disabled={isCreating}
+              className="w-full py-6 font-medium mt-4"
+              onClick={handleSubmit}
+            >
+              {isCreating ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              {isCreating ? "Creating your Profile..." : "Register "}
+            </Button>
             <p className="text-gray-500 text-sm">
               <span>We process your information in accordance with our</span>
               <span> </span>

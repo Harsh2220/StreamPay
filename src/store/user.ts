@@ -13,6 +13,7 @@ interface IUserStore {
   setBio: (bio: string) => void;
   setCompanyID: (companyID: string) => void;
   setLocalImage: ({ selectedFile, selectedFileUrl }: LocalImage) => void;
+  reset: () => void;
 }
 
 const useUserStore = create<IUserStore>((set) => ({
@@ -43,6 +44,17 @@ const useUserStore = create<IUserStore>((set) => ({
       localImage: {
         selectedFile: selectedFile,
         selectedFileUrl: selectedFileUrl,
+      },
+    });
+  },
+  reset: () => {
+    set({
+      name: "",
+      bio: "",
+      companyID: "",
+      localImage: {
+        selectedFile: null,
+        selectedFileUrl: null,
       },
     });
   },

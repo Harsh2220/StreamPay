@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { LocalImage } from "./user";
 import { CompanyType } from "@/types";
 
-
 interface ICompanyStore {
   name: string;
   description: string;
@@ -16,6 +15,7 @@ interface ICompanyStore {
   setLocation: (location: string) => void;
   setLocalImage: ({ selectedFile, selectedFileUrl }: LocalImage) => void;
   setWebsite: (website: string) => void;
+  reset: () => void;
 }
 
 const useCompanyStore = create<ICompanyStore>((set) => ({
@@ -50,7 +50,7 @@ const useCompanyStore = create<ICompanyStore>((set) => ({
   },
   setWebsite: (website) => {
     set({
-     website: website,
+      website: website,
     });
   },
   setLocalImage: ({ selectedFile, selectedFileUrl }: LocalImage) => {
@@ -59,6 +59,19 @@ const useCompanyStore = create<ICompanyStore>((set) => ({
         selectedFile: selectedFile,
         selectedFileUrl: selectedFileUrl,
       },
+    });
+  },
+  reset: () => {
+    set({
+      name: "",
+      description: "",
+      companyType: undefined,
+      location: "",
+      localImage: {
+        selectedFile: null,
+        selectedFileUrl: null,
+      },
+      website: "",
     });
   },
 }));
