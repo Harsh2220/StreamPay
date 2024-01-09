@@ -25,7 +25,7 @@ export default function useCreateStream() {
         recipient: "CZA6Cqz59PioMHfZFjouL54DM4U7yxBDphaVjJUAzLXL",
         start: 0,
         tokenId: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-        transferableByRecipient: true,
+        transferableByRecipient: false,
         transferableBySender: false,
       },
       { sender: anchorWallet as SignerWalletAdapter }
