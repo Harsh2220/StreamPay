@@ -249,24 +249,16 @@
       }
     }
   ],
-  "types": [
-    {
-      "name": "EmployeeNotFoundError",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "EmployeeNotFound"
-          }
-        ]
-      }
-    }
-  ],
   "errors": [
     {
       "code": 6000,
       "name": "AlreadyEmployeeOfTheCompany",
       "msg": "Already Part of the company"
+    },
+    {
+      "code": 6001,
+      "name": "EmployeeNotFound",
+      "msg": "No Employee FOund with the Error"
     }
   ]
 }
