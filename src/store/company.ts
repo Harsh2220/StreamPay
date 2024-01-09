@@ -1,19 +1,21 @@
 import { create } from "zustand";
 import { LocalImage } from "./user";
+import { CompanyType } from "@/types";
 
-export type companyType = "Remote" | "Hybrid" | "In-Office";
 
 interface ICompanyStore {
   name: string;
   description: string;
-  companyType: companyType | undefined;
+  companyType: CompanyType | undefined;
   location: string;
   localImage: LocalImage;
+  website: string;
   setName: (name: string) => void;
   setDescription: (description: string) => void;
-  setCompanyType: (companyType: companyType) => void;
+  setCompanyType: (companyType: CompanyType) => void;
   setLocation: (location: string) => void;
   setLocalImage: ({ selectedFile, selectedFileUrl }: LocalImage) => void;
+  setWebsite: (website: string) => void;
 }
 
 const useCompanyStore = create<ICompanyStore>((set) => ({
@@ -25,6 +27,7 @@ const useCompanyStore = create<ICompanyStore>((set) => ({
     selectedFile: null,
     selectedFileUrl: null,
   },
+  website: "",
   setName: (name) => {
     set({
       name: name,
@@ -43,6 +46,11 @@ const useCompanyStore = create<ICompanyStore>((set) => ({
   setLocation: (location) => {
     set({
       location: location,
+    });
+  },
+  setWebsite: (website) => {
+    set({
+     website: website,
     });
   },
   setLocalImage: ({ selectedFile, selectedFileUrl }: LocalImage) => {

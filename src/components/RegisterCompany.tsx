@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
@@ -12,10 +12,18 @@ import {
 } from "./ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BiSolidPencil } from "react-icons/bi";
-import useCompanyStore, { companyType } from "@/store/company";
+import useCompanyStore from "@/store/company";
 import uploadImageToIPFS from "@/utils/uploadToIPFS";
+import { IPFS_PROTO_PREFIX } from "@/constants";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
+import { CompanyMetadata, CompanyType } from "@/types";
+import { v4 as uuidv4 } from "uuid";
+import uploadMetadata from "@/utils/uploadMetadata";
+import useCreateCompany from "@/hooks/useCreateCompany";
 
-const companyTypes: companyType[] = ["Remote", "Hybrid", "In-Office"];
+const companyTypes: CompanyType[] = ["Remote", "Hybrid", "In-Office"];
 
 export default function RegisterCompany() {
   const {
@@ -28,8 +36,25 @@ export default function RegisterCompany() {
     setCompanyType,
     localImage,
     setLocalImage,
+    companyType,
+    setWebsite,
+    website,
   } = useCompanyStore();
+  const router = useRouter();
 
+  const { createCompany } = useCreateCompany();
+  const [isCreating, setIsCreating] = useState(false);
+
+  const uploadImage = async () => {
+    try {
+      if (!localImage.selectedFile) return;
+      const cid = await uploadImageToIPFS(new Blob([localImage.selectedFile]));
+      if (cid) {
+        return cid;
+      }
+      return undefined;
+    } catch (error) {}
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLocalImage({
@@ -38,13 +63,33 @@ export default function RegisterCompany() {
       });
     }
   };
-
-  const upload = async () => {
+  const handleSubmit = async () => {
+    setIsCreating(true);
     try {
-      if (!localImage.selectedFile) return;
-      const cid = await uploadImageToIPFS(new Blob([localImage.selectedFile]));
-      console.log("Got File CID: ", cid);
-    } catch (error) {}
+      const cid = await uploadImage();
+      const metadata: CompanyMetadata = {
+        metadataId: uuidv4(),
+        name,
+        description,
+        location,
+        logo: cid ? IPFS_PROTO_PREFIX + cid : undefined,
+        website: website,
+        type: companyType ?? "Hybrid",
+      };
+      const metadataUri = await uploadMetadata(metadata);
+      console.log(metadata);
+      console.log(metadataUri);
+      if (!metadataUri) throw new Error("Something went wrong");
+      const txnHash = await createCompany(metadataUri);
+      toast("Company registered !", {
+        description:
+          "Now, you can create list jobs and stream to your employees.",
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsCreating(false);
+    }
   };
   return (
     <section className="overflow-hidden">
@@ -99,7 +144,7 @@ export default function RegisterCompany() {
               <div className="w-full md:w-4/12">
                 <Label className="text-sm font-medium mb-2 block">Type</Label>
                 <Select
-                  onValueChange={(value: companyType) => {
+                  onValueChange={(value: CompanyType) => {
                     setCompanyType(value);
                   }}
                 >
@@ -118,6 +163,17 @@ export default function RegisterCompany() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div>
+              <Label className="text-sm font-medium mb-2 block">WebSite</Label>
+              <Input
+                type="text"
+                placeholder="Your Company's Website(ex: https://example.com)"
+                onChange={(e) => {
+                  setWebsite(e.target.value);
+                }}
+                value={website}
+              />
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">Location</Label>
@@ -142,8 +198,15 @@ export default function RegisterCompany() {
                 value={description}
               />
             </div>
-            <Button className="w-full py-6 font-medium mt-4" onClick={upload}>
-              Submit
+            <Button
+              className="w-full py-6 font-medium mt-4"
+              onClick={handleSubmit}
+              disabled={isCreating}
+            >
+              {isCreating ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              {isCreating ? "Creating your Profile..." : "Create"}
             </Button>
             <p className="text-gray-500 text-sm">
               <span>We process your information in accordance with our</span>

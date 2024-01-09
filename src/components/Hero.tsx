@@ -1,5 +1,6 @@
 import React from "react";
 import Container from "./ui/container";
+import { APP_DESCRIPTION, APP_TAG_LINE } from "@/constants";
 
 export default function Hero() {
   return (
@@ -15,14 +16,11 @@ export default function Hero() {
         <div className="relative pt-36 ml-auto">
           <div className="lg:w-2/3 text-center mx-auto">
             <h1 className="text-gray-900 dark:text-white font-bold text-4xl md:text-6xl xl:text-7xl">
-              Shaping a world with{" "}
-              <span className="dark:text-white">reimagination.</span>
+              {APP_TAG_LINE}{" "}
+              
             </h1>
             <p className="mt-8 text-gray-700 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-              incidunt nam itaque sed eius modi error totam sit illum. Voluptas
-              doloribus asperiores quaerat aperiam. Quidem harum omnis beatae
-              ipsum soluta!
+             {APP_DESCRIPTION}
             </p>
             <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
               <a

@@ -3,6 +3,7 @@ import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { MdOutlineClose } from "react-icons/md";
 import ConnectButton from "./ConnectButton";
 import Container from "./ui/container";
+import { APP_NAME } from "@/constants";
 
 export default function Navbar() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -16,10 +17,7 @@ export default function Navbar() {
               <div className="flex flex-wrap items-center">
                 <div className="w-auto">
                   <a href="#">
-                    <img
-                      src="https://shuffle.dev/zanrly-assets/logos/zanrly-logo-white.svg"
-                      alt=""
-                    />
+                    {APP_NAME}
                   </a>
                 </div>
               </div>

@@ -9,7 +9,8 @@ export default function useCreateCompany() {
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
-  async function createCompany() {
+  async function createCompany(metadataUri: string) {
+    if (!metadataUri) throw new Error("Metadata URI is required");
     try {
       if (!anchorWallet) return;
       const provider = new AnchorProvider(
@@ -20,7 +21,7 @@ export default function useCreateCompany() {
       const program = new Program(idl as Idl, programID, provider);
       const pda = getPDA(anchorWallet?.publicKey?.toBuffer(), true);
       const txHash = await program.methods
-        .initializeCompany("ar://kjsndfnsdfsnjkd")
+        .initializeCompany(metadataUri)
         .accounts({
           company: pda,
           signer: anchorWallet?.publicKey,
