@@ -4,6 +4,7 @@ import { MdOutlineClose } from "react-icons/md";
 import ConnectButton from "./ConnectButton";
 import Container from "./ui/container";
 import { APP_NAME } from "@/constants";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -27,12 +28,12 @@ export default function Navbar() {
                 <div className="w-auto hidden lg:block">
                   <ul className="flex items-center justify-center gap-4">
                     <li>
-                      <a
+                      <Link
                         className="inline-block text font-bold text-white hover:text-gray-100"
-                        href="#"
+                        href="/companies"
                       >
                         Companies
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <a
