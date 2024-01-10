@@ -1,4 +1,3 @@
-import React from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import {
@@ -17,8 +16,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { Duration, UnlockSchedule } from "@/types";
+import useNewStreamStore from "@/store/NewStream";
+import Supported_Tokens from "@/data/SupportedTokens";
+import { toast } from "sonner";
 
-const DURATION = [
+const DURATION: Duration[] = [
   "Second",
   "Minute",
   "Hour",
@@ -29,7 +32,7 @@ const DURATION = [
   "Year",
 ];
 
-const UNLOCK_SCHEDULE = [
+const UNLOCK_SCHEDULE: UnlockSchedule[] = [
   "Per second",
   "Per minute",
   "Hourly",
@@ -41,6 +44,36 @@ const UNLOCK_SCHEDULE = [
 ];
 
 export default function StreamForm() {
+  const {
+    allowAutoClaim,
+    ammount,
+    duration,
+    durationUnit,
+    unlockSchedule,
+    setAllowAutoClaim,
+    setAmmount,
+    setDuration,
+    setDurationUnit,
+    setToken,
+    setUnlockSchedule,
+    reset,
+  } = useNewStreamStore();
+
+  const handleCreateStream = () => {
+    toast("Stream created !", {
+      description:"Stream created successfully !",
+      position:"top-right",
+      
+      action: {
+        label: "View on SolScan",
+        onClick: () => {
+          console.log("View clicked");
+        },
+      },
+    });
+    reset();
+  };
+
   return (
     <section className="py-24 lg:py-28 overflow-hidden">
       <div className="container px-4 mx-auto">
@@ -57,12 +90,24 @@ export default function StreamForm() {
               <Label className="font-medium block px-3">Duration</Label>
               <div className="flex item-center">
                 <div className="w-full md:w-1/2 p-3">
-                  <Input type="number" placeholder="0" min={1} />
+                  <Input
+                    type="number"
+                    placeholder={`0 ${durationUnit}`}
+                    min={1}
+                    value={duration}
+                    onChange={(e) => {
+                      setDuration(e.target.valueAsNumber);
+                    }}
+                  />
                 </div>
                 <div className="w-full md:w-1/2 p-3">
-                  <Select>
+                  <Select
+                    onValueChange={(value: Duration) => {
+                      setDurationUnit(value);
+                    }}
+                  >
                     <SelectTrigger>
-                      <SelectValue placeholder="Theme" />
+                      <SelectValue placeholder="Stream Rate" />
                     </SelectTrigger>
                     <SelectContent>
                       {DURATION.map((e, index) => (
@@ -77,9 +122,15 @@ export default function StreamForm() {
             </div>
             <div className="w-full p-3">
               <Label className="font-medium block pb-3">Unlock schedule</Label>
-              <Select>
+              <Select
+                onValueChange={(value: UnlockSchedule) => {
+                  setUnlockSchedule(value);
+                }}
+              >
                 <SelectTrigger>
-                  <SelectValue placeholder="Theme" />
+                  <SelectValue
+                    placeholder={`Receiver can claim ${unlockSchedule}`}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {UNLOCK_SCHEDULE.map((e, index) => (
@@ -93,14 +144,28 @@ export default function StreamForm() {
             <div className="flex items-center w-full">
               <div className="w-full md:w-1/2 p-3">
                 <Label className="font-medium block pb-3">Select Token</Label>
-                <Select>
+                <Select
+                  onValueChange={(value: string) => {
+                    const selectedToken = Supported_Tokens.find(
+                      (e) => e.symbol === value
+                    );
+                    setToken({
+                      decimals: selectedToken?.decimals!,
+                      tokenAddress: selectedToken?.tokenAddress!,
+                      tokenName: selectedToken?.tokenName!,
+                    });
+                  }}
+                >
                   <SelectTrigger>
-                    <SelectValue placeholder="Theme" />
+                    <SelectValue placeholder="Token" />
                   </SelectTrigger>
                   <SelectContent>
-                    {DURATION.map((e, index) => (
-                      <SelectItem value={e} key={index}>
-                        {e}
+                    {Supported_Tokens.map((e, index) => (
+                      <SelectItem value={e.symbol} key={index} className="my-1">
+                        <div className="flex flex-row items-center">
+                          {e.icon}
+                          <span className="ml-2">{e.symbol}</span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -108,12 +173,25 @@ export default function StreamForm() {
               </div>
               <div className="w-full md:w-1/2 p-3">
                 <Label className="font-medium block pb-3">Amount</Label>
-                <Input type="number" placeholder="0" min={1} />
+                <Input
+                  type="number"
+                  placeholder="0"
+                  value={ammount}
+                  min={1}
+                  onChange={(e) => {
+                    setAmmount(e.target.valueAsNumber);
+                  }}
+                />
               </div>
             </div>
             <div className="bg-gray-900 m-3 p-3 border rounded-xl border-gray-700 w-full">
               <div className="flex gap-2 items-center">
-                <Switch />
+                <Switch
+                  checked={allowAutoClaim}
+                  onCheckedChange={(isChecked) => {
+                    setAllowAutoClaim(isChecked);
+                  }}
+                />
                 <h1 className="text-lg font-semibold">Auto claim</h1>
               </div>
               <div className="mt-2 flex items-center gap-1">
@@ -136,7 +214,10 @@ export default function StreamForm() {
               </div>
             </div>
             <div className="w-full p-3">
-              <Button className="w-full py-6 font-semibold">
+              <Button
+                className="w-full py-6 font-semibold"
+                onClick={handleCreateStream}
+              >
                 Create stream
               </Button>
             </div>
