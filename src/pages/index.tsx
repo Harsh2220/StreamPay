@@ -1,8 +1,5 @@
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
+import RegisterCompany from "@/components/RegisterCompany";
 
 export default function Home() {
-  return (
-    <Hero/>
-  );
+  return <RegisterCompany />;
 }

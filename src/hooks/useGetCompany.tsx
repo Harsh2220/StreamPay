@@ -20,7 +20,7 @@ export default function useGetCompany() {
       const pda = getPDA(anchorWallet?.publicKey?.toBuffer(), true);
       const account = await program.account.company.fetch(pda);
       console.log("Company Account", account);
-      if(account){
+      if (account) {
         console.log("Company Account", account.allEmployees[0].toString());
       }
 
@@ -30,5 +30,22 @@ export default function useGetCompany() {
     }
   }
 
-  return { getCompany };
+  async function getAllCompanies() {
+    try {
+      if (!anchorWallet) return;
+      const provider = new AnchorProvider(
+        connection,
+        anchorWallet,
+        AnchorProvider.defaultOptions()
+      );
+      const program = new Program(idl as Idl, programID, provider);
+      const accounts = await program.account.company.all();
+      console.log(accounts, "accoinr");
+      return accounts;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return { getCompany, getAllCompanies };
 }

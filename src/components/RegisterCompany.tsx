@@ -87,7 +87,10 @@ export default function RegisterCompany() {
         action: {
           label: "View On SolScan",
           onClick: () => {
-            window.open(`https://solscan.io/tx/${txnHash}`, "_blank");
+            window.open(
+              `https://solscan.io/tx/${txnHash}?cluster=devnet`,
+              "_blank"
+            );
           },
         },
       });
