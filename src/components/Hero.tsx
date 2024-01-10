@@ -1,38 +1,38 @@
 import React from "react";
+import Container from "./ui/container";
+import { APP_DESCRIPTION, APP_TAG_LINE } from "@/constants";
 
 export default function Hero() {
   return (
-    <section className="min-h-[calc(100vh-132px)] flex justify-center items-center">
-      <div className="mb-24 text-center md:max-w-4xl mx-auto">
-        <h1 className="mb-8 text-7xl lg:text-8xl text-white tracking-tighter">
-          Making credit history with Nightsable
-        </h1>
-        <p className="mb-10 text-lg text-white md:max-w-sm mx-auto">
-          Nightsable is a strategic branding agency focused on brand creation,
-          rebrands, and brand
-        </p>
-        <div className="flex flex-wrap justify-center -m-2">
-          <div className="w-auto p-2">
+    <Container>
+      <div className="h-[calc(100vh-88px)] flex items-center justify-center">
+        <div className="lg:w-2/3 text-center mx-auto">
+          <h1 className="text-gray-900 dark:text-white font-bold text-4xl md:text-6xl xl:text-7xl">
+            {APP_TAG_LINE}{" "}
+          </h1>
+          <p className="mt-8 text-gray-700 dark:text-gray-300">
+            {APP_DESCRIPTION}
+          </p>
+          <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
             <a
-              className="inline-block px-8 py-4 tracking-tighter border-2 border-green-400 bg-green-400 hover:bg-green-500 text-black focus:ring-4 focus:ring-green-500 focus:ring-opacity-40 rounded-full transition duration-300"
               href="#"
+              className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:bg-blue-500 before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max"
             >
-              Start now for free
+              <span className="relative text-base font-semibold text-white">
+                Get started
+              </span>
             </a>
-          </div>
-          <div className="w-auto p-2">
             <a
-              className="inline-block px-8 py-4 text-white hover:text-black tracking-tighter hover:bg-green-400 border-2 border-white focus:border-green-400 focus:border-opacity-40 hover:border-green-400 focus:ring-4 focus:ring-green-400 focus:ring-opacity-40 rounded-full transition duration-300"
               href="#"
+              className="relative flex h-11 w-full items-center justify-center px-6 before:absolute before:inset-0 before:rounded-full before:border before:border-transparent before:bg-primary/10 before:bg-gradient-to-b before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 dark:before:border-gray-700 dark:before:bg-gray-800 sm:w-max"
             >
-              Log in
+              <span className="relative text-base font-semibold text-primary dark:text-white">
+                Learn more
+              </span>
             </a>
           </div>
         </div>
       </div>
-    </section>
+    </Container>
   );
 }
-
-
-// https://www.socketscan.io/tx/0x1fab373cfd63f3a282a5a9d386e8c8cba0c9a03b03016b8d5dfb1662269379bf

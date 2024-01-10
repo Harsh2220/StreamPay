@@ -1,4 +1,4 @@
-import React from "react";
+import { ChangeEvent, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
@@ -12,8 +12,105 @@ import {
 } from "./ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BiSolidPencil } from "react-icons/bi";
+import useCompanyStore from "@/store/company";
+import uploadImageToIPFS from "@/utils/uploadToIPFS";
+import { IPFS_PROTO_PREFIX } from "@/constants";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
+import { CompanyMetadata, CompanyType } from "@/types";
+import { v4 as uuidv4 } from "uuid";
+import uploadMetadata from "@/utils/uploadMetadata";
+import useCreateCompany from "@/hooks/useCreateCompany";
+
+const companyTypes: CompanyType[] = ["Remote", "Hybrid", "In-Office"];
 
 export default function RegisterCompany() {
+  const {
+    name,
+    description,
+    location,
+    setName,
+    setLocation,
+    setDescription,
+    setCompanyType,
+    localImage,
+    setLocalImage,
+    companyType,
+    setWebsite,
+    website,
+  } = useCompanyStore();
+  const router = useRouter();
+
+  const { createCompany } = useCreateCompany();
+  const [isCreating, setIsCreating] = useState(false);
+
+  const uploadImage = async () => {
+    try {
+      if (!localImage.selectedFile) return;
+      const cid = await uploadImageToIPFS(new Blob([localImage.selectedFile]));
+      if (cid) {
+        return cid;
+      }
+      return undefined;
+    } catch (error) {}
+  };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setLocalImage({
+        selectedFile: e.target.files[0],
+        selectedFileUrl: URL.createObjectURL(e.target.files[0]),
+      });
+    }
+  };
+  const handleSubmit = async () => {
+    setIsCreating(true);
+    try {
+      const cid = await uploadImage();
+      const metadata: CompanyMetadata = {
+        metadataId: uuidv4(),
+        name,
+        description,
+        location,
+        logo: cid ? IPFS_PROTO_PREFIX + cid : undefined,
+        website: website,
+        type: companyType ?? "Hybrid",
+      };
+      const metadataUri = await uploadMetadata(metadata);
+      console.log(metadata);
+      console.log(metadataUri);
+      if (!metadataUri) throw new Error("Something went wrong");
+      const txnHash = await createCompany(metadataUri);
+      toast("Company registered !", {
+        description:
+          "Now, you can create list jobs and stream to your employees.",
+        action: {
+          label: "View On SolScan",
+          onClick: () => {
+            window.open(
+              `https://solscan.io/tx/${txnHash}?cluster=devnet`,
+              "_blank"
+            );
+          },
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes("User rejected the request")) {
+          toast("User rejected the request", {
+            description: "Please accept the request to create your profile.",
+          });
+          return;
+        }
+        toast("Something went wrong!", {
+          description:
+            "Please try again :(, If the problem persists, please contact us.",
+        });
+      }
+    } finally {
+      setIsCreating(false);
+    }
+  };
   return (
     <section className="overflow-hidden">
       <div className="container px-4 mx-auto">
@@ -28,12 +125,26 @@ export default function RegisterCompany() {
             <div className="flex justify-center items-center mb-5">
               <div className="relative">
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage
+                    src={
+                      localImage.selectedFileUrl ??
+                      "https://github.com/shadcn.png"
+                    }
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <div className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer">
+                <Label
+                  htmlFor="comapnay-logo"
+                  className="absolute bottom-0 right-0 bg-white p-1 rounded-full cursor-pointer"
+                >
                   <BiSolidPencil className="text-black" />
-                </div>
+                </Label>
+                <input
+                  type="file"
+                  id="comapnay-logo"
+                  hidden
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <div className="flex items-center flex-wrap justify-between">
@@ -41,11 +152,22 @@ export default function RegisterCompany() {
                 <Label className="text-sm font-medium mb-2 block">
                   Company Name
                 </Label>
-                <Input type="text" placeholder="Enter your company's name" />
+                <Input
+                  type="text"
+                  placeholder="Enter your company's name"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                  value={name}
+                />
               </div>
               <div className="w-full md:w-4/12">
                 <Label className="text-sm font-medium mb-2 block">Type</Label>
-                <Select>
+                <Select
+                  onValueChange={(value: CompanyType) => {
+                    setCompanyType(value);
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue
                       placeholder="Select company type"
@@ -53,24 +175,59 @@ export default function RegisterCompany() {
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Remote">Remote</SelectItem>
-                    <SelectItem value="Hybrid">Hybrid</SelectItem>
-                    <SelectItem value="In office">In office</SelectItem>
+                    {companyTypes.map((companyType, index) => (
+                      <SelectItem key={index} value={companyType}>
+                        {companyType}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
             <div>
+              <Label className="text-sm font-medium mb-2 block">WebSite</Label>
+              <Input
+                type="text"
+                placeholder="Your Company's Website(ex: https://example.com)"
+                onChange={(e) => {
+                  setWebsite(e.target.value);
+                }}
+                value={website}
+              />
+            </div>
+            <div>
               <Label className="text-sm font-medium mb-2 block">Location</Label>
-              <Input type="text" placeholder="Location" />
+              <Input
+                type="text"
+                placeholder="Location"
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                }}
+                value={location}
+              />
             </div>
             <div>
               <Label className="text-sm font-medium mb-2 block">
                 Description
               </Label>
-              <Textarea placeholder="Write about your company" />
+              <Textarea
+                placeholder="Write about your company"
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+                value={description}
+              />
             </div>
-            <Button className="w-full py-6 font-medium mt-4">Submit</Button>
+            <Button
+              className="w-full py-6 font-medium mt-4"
+              onClick={handleSubmit}
+              disabled={isCreating}
+            >
+              {isCreating ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              {isCreating ? "Creating your Profile..." : "Create"}
+            </Button>
             <p className="text-gray-500 text-sm">
               <span>We process your information in accordance with our</span>
               <span> </span>
