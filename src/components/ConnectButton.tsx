@@ -28,11 +28,10 @@ export default function ConnectButton() {
             <IoIosArrowDown />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-52 p-2">
-            <DropdownMenuItem className="cursor-pointer p-3 font-medium gap-2" onClick={()=>router.push("/registercompany")}>
-              <HiPencil />
-              Register company
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer p-3 font-medium gap-2">
+            <DropdownMenuItem
+              className="cursor-pointer p-3 font-medium gap-2"
+              onClick={() => router.push("/profile")}
+            >
               <FaUser />
               Your profile
             </DropdownMenuItem>

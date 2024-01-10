@@ -1,5 +1,5 @@
-import RegisterCompany from "@/components/RegisterCompany";
+import Hero from "@/components/Hero";
 
 export default function Home() {
-  return <RegisterCompany />;
+  return <Hero />;
 }
