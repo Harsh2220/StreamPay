@@ -17,3 +17,7 @@ export type UserMetadata = {
   companyID: string;
   picture: string | undefined;
 };
+
+export type Duration = "Second" | "Minute" | "Hour" | "Day" | "Week" | "Month" | "Quarter" | "Year";
+
+export type UnlockSchedule = "Per second" | "Per minute" | "Hourly" | "Daily" | "Weekly" | "Monthly" | "Quarterly" | "Yearly";
