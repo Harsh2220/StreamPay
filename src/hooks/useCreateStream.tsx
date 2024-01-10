@@ -1,9 +1,9 @@
 import { getBN } from "@streamflow/stream";
 import useSolanaStreamClient from "./useSolanaStreamClient";
-import getSecondsFromDays from "@/utils/getSecondsFromDays";
 import { BN } from "@project-serum/anchor";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { SignerWalletAdapter } from "@solana/wallet-adapter-base";
+import { getSecondsFromDays } from "@/utils/getSecondsFromDays";
 
 export default function useCreateStream() {
   const { client } = useSolanaStreamClient();
