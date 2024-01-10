@@ -1,6 +1,7 @@
+import { UsersData } from "@/types";
 import React from "react";
 
-export default function UserCard() {
+export default function UserCard({ user }: { user: UsersData }) {
   return (
     <div className="w-full md:w-1/4">
       <div className="relative max-w-max mx-auto h-full overflow-hidden rounded-3xl aspect-square border border-gray-900">
