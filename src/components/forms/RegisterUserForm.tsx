@@ -9,11 +9,11 @@ import { ChangeEvent, useState } from "react";
 import { BiSolidPencil } from "react-icons/bi";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
 export default function RegisterUserForm() {
   const [isCreating, setIsCreating] = useState(false);

@@ -2,10 +2,12 @@ import { StreamToken } from "@/store/NewStream";
 import USDC from "@/icons/USDC";
 import USDT from "@/icons/USDT";
 import WSOL from "@/icons/WSOL";
+
 type Token = {
   symbol: string;
   icon: React.ReactNode;
 } & StreamToken;
+
 const Supported_Tokens: Token[] = [
   {
     symbol: "USDC",

@@ -1,4 +1,4 @@
-import RegisterUserForm from "@/components/RegisterUserForm";
+import RegisterUserForm from "@/components/forms/RegisterUserForm";
 import Container from "@/components/ui/container";
 import React from "react";
 

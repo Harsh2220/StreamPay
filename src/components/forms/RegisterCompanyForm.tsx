@@ -1,16 +1,16 @@
 import { ChangeEvent, useState } from "react";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+} from "../ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { BiSolidPencil } from "react-icons/bi";
 import useCompanyStore from "@/store/company";
 import uploadImageToIPFS from "@/utils/uploadToIPFS";

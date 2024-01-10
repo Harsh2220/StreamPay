@@ -1,4 +1,4 @@
-import RegisterCompanyForm from "@/components/RegisterCompanyForm";
+import RegisterCompanyForm from "@/components/forms/RegisterCompanyForm";
 import Container from "@/components/ui/container";
 
 function RegisterCompany() {
