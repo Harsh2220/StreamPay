@@ -1,5 +1,6 @@
-import * as React from "react"
-import { SVGProps, memo } from "react"
+import * as React from "react";
+import { SVGProps, memo } from "react";
+
 const USDC = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -16,6 +17,6 @@ const USDC = (props: SVGProps<SVGSVGElement>) => (
       </g>
     </g>
   </svg>
-)
+);
 
-export default memo(USDC)
+export default memo(USDC);

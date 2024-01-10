@@ -1,4 +1,4 @@
-import CompanyCard from "@/components/CompanyCard";
+import CompanyCard from "@/components/cards/CompanyCard";
 import Container from "@/components/ui/container";
 import useGetCompany from "@/hooks/useGetCompany";
 import { CompanyData } from "@/types";

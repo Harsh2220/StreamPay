@@ -1,20 +1,19 @@
-import RegisterCompanyForm from "@/components/forms/RegisterCompanyForm";
+import RegisterUserForm from "@/components/forms/RegisterUserForm";
 import Container from "@/components/ui/container";
+import React from "react";
 
-function RegisterCompany() {
+export default function RegisterUser() {
   return (
     <Container>
       <div className="py-20 max-w-3xl mx-auto relative z-10">
         <h1 className="mb-4 text-center text-3xl lg:text-5xl font-bold font-heading">
-          Register company
+          Register user
         </h1>
         <p className="text-center text-gray-600 mb-12">
-          Submit your info and pay to your employees direct through stream.
+          Submit your info and get paid direct through stream.
         </p>
-        <RegisterCompanyForm />
+        <RegisterUserForm />
       </div>
     </Container>
   );
 }
-
-export default RegisterCompany;

@@ -1,21 +1,21 @@
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
+} from "../ui/select";
+import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 import { IoIosInformationCircle } from "react-icons/io";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
+} from "../ui/tooltip";
 import { Duration, UnlockSchedule } from "@/types";
 import useNewStreamStore from "@/store/NewStream";
 import Supported_Tokens from "@/data/SupportedTokens";
@@ -61,9 +61,9 @@ export default function StreamForm() {
 
   const handleCreateStream = () => {
     toast("Stream created !", {
-      description:"Stream created successfully !",
-      position:"top-right",
-      
+      description: "Stream created successfully !",
+      position: "top-right",
+
       action: {
         label: "View on SolScan",
         onClick: () => {

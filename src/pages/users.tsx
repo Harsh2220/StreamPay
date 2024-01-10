@@ -1,4 +1,4 @@
-import UserCard from "@/components/UserCard";
+import UserCard from "@/components/cards/UserCard";
 import Container from "@/components/ui/container";
 import useGetUser from "@/hooks/useGetUser";
 import { UsersData } from "@/types";

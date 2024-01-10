@@ -14,7 +14,9 @@ export default function UserCard({ user }: { user: UsersData }) {
           <h3 className="text-xl font-semibold leading-snug">
             Leslie Alexander
           </h3>
-          <p className="text-gray-400 font-medium">Co-Founder, CEO</p>
+          <p className="text-gray-400 font-medium line-clamp-1">
+            Co-Founder, CEO
+          </p>
         </div>
       </div>
     </div>
