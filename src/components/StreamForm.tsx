@@ -61,9 +61,9 @@ export default function StreamForm() {
 
   const handleCreateStream = () => {
     toast("Stream created !", {
-      description:"Stream created successfully !",
-      position:"top-right",
-      
+      description: "Stream created successfully !",
+      position: "top-right",
+
       action: {
         label: "View on SolScan",
         onClick: () => {
